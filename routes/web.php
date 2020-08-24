@@ -13,10 +13,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/home', function () {
+    return redirect()->route('tasks.index');
+})->name('home');
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('tasks', 'TaskController@index')->name('tasks.index');
+    Route::post('tasks', 'TaskController@store')->name('tasks.store');
+    Route::put('tasks/sync', 'TaskController@sync')->name('tasks.sync');
+    Route::put('tasks/{task}', 'TaskController@update')->name('tasks.update');
 });
-Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-
+Route::group(['middleware' => 'auth'], function () {
+    Route::post('statuses', 'StatusController@store')->name('statuses.store');
+    Route::put('statuses', 'StatusController@update')->name('statuses.update');
+});
