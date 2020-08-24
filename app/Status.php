@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Status extends Model
 {
-    protected $fillable = [‘title’, ‘slug’, ‘order’];
+    protected $fillable = ['title', 'slug', 'order'];
 
     public $timestamps = false; //Ps because in tutorial this migration haven`t timestamps
 

@@ -19,7 +19,6 @@ class CreateStatusesTable extends Migration
             $table->string('slug');
             $table->smallInteger('order')->default(0);
             $table->unsignedInteger('user_id');
-            $table->timestamps();
         });
     }
 
