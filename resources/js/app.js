@@ -1,5 +1,6 @@
 require('./bootstrap');
 import KanbanBoard from "./components/KanbanBoard";
+import AddTaskForm from "./components/AddTaskForm"
 
 window.Vue = require("vue");
 
@@ -8,6 +9,7 @@ window.Vue = require("vue");
 const app = new Vue({
     el: "#app",
     components: {
-        KanbanBoard
+        KanbanBoard,
+        AddTaskForm
     }
 });
