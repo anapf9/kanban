@@ -24353,8 +24353,8 @@ var render = function() {
               [
                 _vm.newTaskForStatus === status.id
                   ? _c("AddTaskForm", {
-                      attrs: {
-                        "status-id": status.id,
+                      attrs: { "status-id": status.id },
+                      on: {
                         "task-added": _vm.handleTaskAdded,
                         "task-canceled": _vm.closeAddTaskForm
                       }

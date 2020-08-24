@@ -20,8 +20,8 @@
                     <AddTaskForm
                         v-if="newTaskForStatus === status.id"
                         :status-id="status.id"
-                        :task-added="handleTaskAdded"
-                        :task-canceled="closeAddTaskForm"
+                        @task-added="handleTaskAdded"
+                        @task-canceled="closeAddTaskForm"
                     />
                     <!-- Tasks -->
                     <draggable
