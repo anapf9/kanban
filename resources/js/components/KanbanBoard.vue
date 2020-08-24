@@ -16,7 +16,7 @@
                         Add Task
                     </button>
                 </div>
-                <div class="p-2 flex-1 flex flex-col h-full overflow-x-hidden overflow-y-auto bg-blue-100">
+                <div class="p-2 bg-blue-100">
                     <AddTaskForm
                         v-if="newTaskForStatus === status.id"
                         :status-id="status.id"
@@ -24,18 +24,30 @@
                         :task-canceled="closeAddTaskForm"
                     />
                     <!-- Tasks -->
-                    <div
-                        v-for="task in status.tasks"
-                        :key="task.id"
-                        class="mb-3 p-3 h-24 flex flex-col bg-white rounded-md shadow transform hover:shadow-md cursor-pointer"
+                    <draggable
+                        class="flex-1 overflow-hidden"
+                        v-model="status.tasks"
+                        v-bind="taskDragOptions"
+                        @end="handleTaskMoved"
                     >
-                        <span class="block mb-2 text-xl text-gray-900">
-                          {{ task.title }}
-                        </span>
-                        <p class="text-gray-700 truncate">
-                            {{ task.description }}
-                        </p>
-                    </div>
+                        <transition-group
+                            class="flex-1 flex flex-col h-full overflow-x-hidden overflow-y-auto rounded shadow-xs"
+                            tag="div"
+                        >
+                            <div
+                                v-for="task in status.tasks"
+                                :key="task.id"
+                                class="mb-3 p-3 h-24 flex flex-col bg-white rounded-md shadow transform hover:shadow-md cursor-pointer"
+                            >
+                                <span class="block mb-2 text-xl text-gray-900">
+                                  {{ task.title }}
+                                </span>
+                                <p class="text-gray-700 truncate">
+                                    {{ task.description }}
+                                </p>
+                            </div>
+                        </transition-group>
+                    </draggable>
                     <!-- ./Tasks -->
 
                     <!-- No Tasks -->
@@ -62,18 +74,29 @@
 
 <script>
     import AddTaskForm from "./AddTaskForm";
+    import draggable from "vuedraggable";
     export default {
         props: {
             initialData: Array
         },
         components: {
-            AddTaskForm
+            AddTaskForm,
+            draggable
         },
         data() {
             return {
                 statuses: [],
                 newTaskForStatus: 0
             };
+        },
+        computed: {
+            taskDragOptions() {
+                return {
+                    animation: 200,
+                    group: "task-list",
+                    dragClass: "status-drag"
+                };
+            }
         },
         mounted() {
             // 'clone' the statuses so we don't alter the prop when making changes
@@ -101,6 +124,18 @@
                 // Reset and close the AddTaskForm
                 this.closeAddTaskForm();
             },
+            handleTaskMoved() {
+                // Send the entire list of statuses to the server
+                axios.put("/tasks/sync", {columns: this.statuses}).catch(err => {
+                    console.log(err.response);
+                });
+            }
         }
     };
 </script>
+<style scoped>
+    .status-drag {
+        transition: transform 0.5s;
+        transition-property: all;
+    }
+</style>
